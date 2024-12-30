@@ -2,9 +2,17 @@ import React, { useState, useEffect } from 'react';
 import EventDetails from '../Events/EventDetails'; // Import the EventDetails component
 import { Button } from '../ui/button'; // Using shadcn UI button component
 
+interface Events {
+  [year: string]: {
+    [month: string]: {
+      [day: string]: { title: string; description: string; start: string; end: string; category: string }[]; 
+    };
+  };
+}
+
 const DatesGrid: React.FC<{ currentDate: Date; today: Date }> = ({ currentDate, today }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [events, setEvents] = useState<any>({});
+  const [events, setEvents] = useState<Events>({});
   const [isEventDetailsOpen, setIsEventDetailsOpen] = useState(false);
 
   const getFirstDayOfMonth = (date: Date): Date => new Date(date.getFullYear(), date.getMonth(), 1);
@@ -26,7 +34,7 @@ const DatesGrid: React.FC<{ currentDate: Date; today: Date }> = ({ currentDate, 
   };
 
   // Save events to localStorage
-  const saveEventsToLocalStorage = (updatedEvents: any) => {
+  const saveEventsToLocalStorage = (updatedEvents: Events) => {
     localStorage.setItem('events', JSON.stringify(updatedEvents));
   };
 
@@ -44,6 +52,16 @@ const DatesGrid: React.FC<{ currentDate: Date; today: Date }> = ({ currentDate, 
     }
   };
 
+  // Check if a specific date has events
+  const hasEntry = (events: Events, year: string, month: string, day: string): boolean => {
+    return (
+      events[year] &&
+      events[year][month] &&
+      events[year][month][day] &&
+      events[year][month][day].length > 0
+    );
+  };
+
   // Generate the grid of dates
   const dates = [];
   for (let i = 0; i < totalCells; i++) {
@@ -54,16 +72,24 @@ const DatesGrid: React.FC<{ currentDate: Date; today: Date }> = ({ currentDate, 
       currentDate.getMonth() === today.getMonth() &&
       currentDate.getFullYear() === today.getFullYear();
 
-    
+    const hasEvents =
+      i >= startDay &&
+      day > 0 &&
+      hasEntry(events, currentDate.getFullYear().toString(), (currentDate.getMonth() + 1).toString(), day.toString());
+
+    // Check if the day is a weekend (Saturday or Sunday)
+    const isWeekend = i >= startDay && (new Date(currentDate.getFullYear(), currentDate.getMonth(), day).getDay() === 6 || new Date(currentDate.getFullYear(), currentDate.getMonth(), day).getDay() === 0);
 
     dates.push(
       <div
         key={i}
         className={`h-10 flex items-center justify-center cursor-pointer ${
           i >= startDay && day <= daysInMonth
-            ? `rounded-md ${
+            ? `rounded-md ${isWeekend ? 'bg-gray-200' : ''} ${
                 isToday
                   ? 'bg-blue-600 text-white'
+                  : hasEvents
+                  ? 'bg-green-500 text-white'
                   : 'bg-primary/10'
               }`
             : 'text-muted-foreground'
@@ -105,4 +131,3 @@ const DatesGrid: React.FC<{ currentDate: Date; today: Date }> = ({ currentDate, 
 };
 
 export default DatesGrid;
- 
