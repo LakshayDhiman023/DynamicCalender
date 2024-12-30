@@ -2,7 +2,7 @@
 
 import './App.css'
 
-import Calendar from './components/Calander'
+import Calendar from './components/Calender/Calander'
 
 function App() {
  
