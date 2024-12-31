@@ -34,10 +34,10 @@ const EditEvent: React.FC<EditEventProps> = ({
     );
   };
 
-  // Time slots available (in a 24-hour format) for start and end time
-  const availableTimes = Array.from({ length: 24 }, (_, index) =>
-    String(index).padStart(2, "0") + ":00"
-  );
+  // // Time slots available (in a 24-hour format) for start and end time
+  // const availableTimes = Array.from({ length: 24 }, (_, index) =>
+  //   String(index).padStart(2, "0") + ":00"
+  // );
 
   useEffect(() => {
     if (selectedDate) {
@@ -125,6 +125,7 @@ const EditEvent: React.FC<EditEventProps> = ({
     // Close the modal
     closeModal();
     alert("Event updated successfully!");
+    location.reload();
   };
 
   return (

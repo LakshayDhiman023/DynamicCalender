@@ -96,6 +96,7 @@ const AddEvent: React.FC<AddEventProps> = ({
 
     alert("Event saved successfully!");
     handleDateChange(selectedDate)
+    location.reload();
     onClose();
     
   };

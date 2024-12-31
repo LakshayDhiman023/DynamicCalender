@@ -1,6 +1,6 @@
 // components/DeleteEvent.tsx
 import React from "react";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../ui/dialog";
+import { Dialog,  DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../ui/dialog";
 import { Button } from "../ui/button";
 
 interface DeleteEventProps {

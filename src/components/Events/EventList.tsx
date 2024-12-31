@@ -105,6 +105,7 @@ const EventList: React.FC<EventListProps> = ({ selectedDate, handleDateChange })
       setDeleteIndex(null);
       handleDateChange(selectedDate);
       setIsDeleteDialogOpen(false);
+      location.reload()
     }
   };
 

@@ -125,6 +125,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({
 
     setEvents(updatedEvents);
     saveEventsToLocalStorage(updatedEvents);
+    // location.reload()
   };
 
   const getCategoryColor = (category: string) => {
@@ -157,7 +158,7 @@ const EventDetails: React.FC<EventDetailsProps> = ({
             <p className="text-gray-500">No events for this date</p>
           ) : (
             <ul>
-              {currentEvents.map((event, index) => (
+              {currentEvents.map((event: any, index: number) => (
                 <li
                   key={index}
                   className={`mt-2 flex justify-between items-center p-2 rounded ${getCategoryColor(

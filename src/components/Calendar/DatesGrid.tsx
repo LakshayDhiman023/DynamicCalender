@@ -53,9 +53,9 @@ const DatesGrid: React.FC<DatesGridProps> = ({
   };
 
   // Save events to localStorage
-  const saveEventsToLocalStorage = (updatedEvents: Events) => {
-    localStorage.setItem("events", JSON.stringify(updatedEvents));
-  };
+  // const saveEventsToLocalStorage = (updatedEvents: Events) => {
+  //   localStorage.setItem("events", JSON.stringify(updatedEvents));
+  // };
 
   // Initialize events from localStorage on component mount
   useEffect(() => {
