@@ -1,0 +1,31 @@
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ... */
+
+.event-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e5e7eb; /* Gray-200 */
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  .event-item h3 {
+    font-size: 1.125rem; /* Text-lg */
+    font-weight: 600;
+  }
+  .event-item p {
+    font-size: 0.875rem; /* Text-sm */
+    color: #6b7280; /* Gray-500 */
+  }
+  .edit-btn,
+  .delete-btn {
+    margin-left: 8px;
+  }
+  
