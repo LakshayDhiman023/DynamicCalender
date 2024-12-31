@@ -16,18 +16,33 @@ interface AddEventProps {
   selectedDate: Date | null;
   isOpen: boolean;
   onClose: () => void;
+  handleDateChange: (date: Date | null) => void;
+  
 }
 
 const AddEvent: React.FC<AddEventProps> = ({
   selectedDate,
   isOpen,
   onClose,
+  handleDateChange
 }) => {
   const [title, setTitle] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<string>("work"); // Default category
+
+  // Helper function to check if two time ranges overlap
+  const timesOverlap = (
+    start1: string,
+    end1: string,
+    start2: string,
+    end2: string
+  ) => {
+    return (
+      (start1 >= start2 && start1 < end2) || (start2 >= start1 && start2 < end1)
+    );
+  };
 
   const saveEvent = () => {
     if (!selectedDate) {
@@ -43,18 +58,30 @@ const AddEvent: React.FC<AddEventProps> = ({
     // Retrieve existing events from localStorage
     const existingEvents = JSON.parse(localStorage.getItem("events") || "{}");
 
-    // Update the event details for the selected date
+    // Ensure the structure is in place for the year, month, and date
     if (!existingEvents[year]) existingEvents[year] = {};
     if (!existingEvents[year][month]) existingEvents[year][month] = {};
     if (!existingEvents[year][month][date])
       existingEvents[year][month][date] = [];
 
+    // Check for overlapping events
+    const overlappingEvent = existingEvents[year][month][date].find(
+      (event: { startTime: string; endTime: string }) =>
+        timesOverlap(startTime, endTime, event.startTime, event.endTime)
+    );
+
+    if (overlappingEvent) {
+      alert("The event time overlaps with an existing event.");
+      return;
+    }
+
+    // Add the new event to the list
     existingEvents[year][month][date].push({
       title,
       startTime,
       endTime,
       description,
-      category, // Add the category to the event object
+      category,
     });
 
     // Save the updated events back to localStorage
@@ -68,14 +95,15 @@ const AddEvent: React.FC<AddEventProps> = ({
     setCategory("work");
 
     alert("Event saved successfully!");
+    handleDateChange(selectedDate)
     onClose();
+    
   };
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      {/* Set a solid background color and shadow for the card */}
       <Card className="max-w-md w-full bg-white shadow-2xl border border-gray-300 rounded-lg">
         <CardHeader>
           <CardTitle>Add Event</CardTitle>
@@ -107,7 +135,10 @@ const AddEvent: React.FC<AddEventProps> = ({
                 id="start-time"
                 type="time"
                 value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
+                onChange={(e) => {
+                  setStartTime(e.target.value);
+                  setEndTime(""); // Reset end time when start time changes
+                }}
                 required
               />
             </div>
@@ -118,6 +149,7 @@ const AddEvent: React.FC<AddEventProps> = ({
                 type="time"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
+                min={startTime} // Ensure end time is after start time
                 required
               />
             </div>

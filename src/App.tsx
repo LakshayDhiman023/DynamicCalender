@@ -15,15 +15,16 @@ function App() {
 
   return (
     <>
-      <div className="flex h-screen w-full">
-        {/* Calendar takes up 60% of the width */}
-        <div className="flex-6 p-4 border-r border-gray-300">
+    
+      <div className="flex ">
+
+        <div className="w-7/12 p-4 border-r border-gray-300">
           <Calendar updateDate={updateDate} selectedDate={selectedDate} />
         </div>
 
-        {/* Event List takes up 40% of the width */}
-        <div className="flex-4 p-4">
-          <EventList selectedDate={selectedDate} />
+
+        <div className="w-5/12 p-4">
+          <EventList selectedDate={selectedDate} updateDate = {updateDate}/>
         </div>
       </div>
     </>

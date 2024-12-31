@@ -6,15 +6,20 @@ import { Button } from "../ui/button";
 
 interface EventMainProps {
   selectedDate: Date | null;
+  updateDate: (date: Date | null) => void;
 }
 
-const EventMain: React.FC<EventMainProps> = ({ selectedDate }) => {
+const EventMain: React.FC<EventMainProps> = ({ selectedDate, updateDate }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleDateChange = (date: Date | null) => {
+    
+    updateDate(date);
+  };
 
   return (
     <div>
       {/* <div>{selectedDate?.toDateString()}</div> */}
-      <EventList selectedDate={selectedDate}/>
+      <EventList selectedDate={selectedDate} handleDateChange = {handleDateChange}/>
       {selectedDate === null ? (
         <div>No date selected</div>
       ) : (
@@ -29,6 +34,7 @@ const EventMain: React.FC<EventMainProps> = ({ selectedDate }) => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           selectedDate={selectedDate}
+          handleDateChange = {handleDateChange}
         />
       )}
     </div>

@@ -3,7 +3,6 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
-import { Select, SelectTrigger, SelectContent, SelectItem } from "../ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 
 interface EditEventProps {
@@ -22,6 +21,23 @@ const EditEvent: React.FC<EditEventProps> = ({
   const [endTime, setEndTime] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [category, setCategory] = useState<string>("work");
+
+  // Helper function to check if two time ranges overlap
+  const timesOverlap = (
+    start1: string,
+    end1: string,
+    start2: string,
+    end2: string
+  ) => {
+    return (
+      (start1 >= start2 && start1 < end2) || (start2 >= start1 && start2 < end1)
+    );
+  };
+
+  // Time slots available (in a 24-hour format) for start and end time
+  const availableTimes = Array.from({ length: 24 }, (_, index) =>
+    String(index).padStart(2, "0") + ":00"
+  );
 
   useEffect(() => {
     if (selectedDate) {
@@ -83,6 +99,17 @@ const EditEvent: React.FC<EditEventProps> = ({
     if (!storedEvents[year][month]) storedEvents[year][month] = {};
     if (!storedEvents[year][month][date]) storedEvents[year][month][date] = [];
 
+    // Check for overlapping events, excluding the current event being edited
+    const overlappingEvent = storedEvents[year][month][date].find(
+      (event: { startTime: string; endTime: string }, index: number) =>
+        index !== eventIndex && timesOverlap(startTime, endTime, event.startTime, event.endTime)
+    );
+
+    if (overlappingEvent) {
+      alert("The event time overlaps with an existing event.");
+      return;
+    }
+
     // Update the specific event
     storedEvents[year][month][date][eventIndex] = {
       title,
@@ -136,7 +163,10 @@ const EditEvent: React.FC<EditEventProps> = ({
               id="start-time"
               type="time"
               value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
+              onChange={(e) => {
+                setStartTime(e.target.value);
+                setEndTime(""); // Reset end time when start time changes
+              }}
               required
             />
           </div>
@@ -147,24 +177,17 @@ const EditEvent: React.FC<EditEventProps> = ({
               type="time"
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
+              min={startTime} // Ensure the end time is after the start time
               required
             />
           </div>
           <div>
             <Label htmlFor="category">Category</Label>
-            <Select
+            <Input
+              id="category"
               value={category}
-              onValueChange={(value) => setCategory(value)}
-            >
-              <SelectTrigger id="category">
-                <span>{category}</span>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="work">Work</SelectItem>
-                <SelectItem value="personal">Personal</SelectItem>
-                <SelectItem value="others">Others</SelectItem>
-              </SelectContent>
-            </Select>
+              onChange={(e) => setCategory(e.target.value)}
+            />
           </div>
           <div>
             <Label htmlFor="description">Event Description</Label>

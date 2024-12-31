@@ -52,7 +52,7 @@ const Calendar: React.FC<CalendarProps> = ({ updateDate, selectedDate }) => {
           <DatesGrid currentDate={currentDate} handleDateChange = {handleDateChange} selectedDate={selectedDate }/>
         </CardContent>
       </Card>
-      <div className="w-80"></div>
+      
     </div>
   );
 
