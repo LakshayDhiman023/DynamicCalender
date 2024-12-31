@@ -20,13 +20,13 @@ interface Events {
 interface DatesGridProps {
   currentDate: Date;
   handleDateChange: (date: Date | null) => void;
-  selectedDate: Date | null
+  selectedDate: Date | null;
 }
 
 const DatesGrid: React.FC<DatesGridProps> = ({
   currentDate,
   handleDateChange,
-  selectedDate
+  selectedDate,
 }) => {
   const [events, setEvents] = useState<Events>({});
 
@@ -100,10 +100,11 @@ const DatesGrid: React.FC<DatesGridProps> = ({
       day === todayDate &&
       currentDate.getMonth() === today.getMonth() &&
       currentDate.getFullYear() === today.getFullYear();
-    const isSelected = i >= startDay &&
-    day === selectedDate?.getDate() &&
-    selectedDate?.getMonth() === currentDate.getMonth() &&
-    selectedDate?.getFullYear() === currentDate.getFullYear();
+    const isSelected =
+      i >= startDay &&
+      day === selectedDate?.getDate() &&
+      selectedDate?.getMonth() === currentDate.getMonth() &&
+      selectedDate?.getFullYear() === currentDate.getFullYear();
 
     const hasEvents =
       i >= startDay &&
@@ -135,10 +136,12 @@ const DatesGrid: React.FC<DatesGridProps> = ({
         className={`h-10 flex items-center justify-center cursor-pointer ${
           i >= startDay && day <= daysInMonth
             ? `rounded-md ${
-                hasEvents
-                  ? "bg-green-500 text-white"
+                isSelected
+                  ? "bg-lime-100"
                   : isToday
-                  ? "bg-blue-500": isSelected ? 'bg-lime-100'
+                  ? "bg-blue-500"
+                  : hasEvents
+                  ? "bg-green-500 text-white"
                   : isWeekend
                   ? "bg-gray-300" // Weekends with no events will be white
                   : "bg-white" // Weekdays without events will be grey
